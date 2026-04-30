@@ -21,9 +21,11 @@
     border: var(--border-style);
   }
   
-  /* 文章页、归档页、普通页面 */
+  /* 文章页、归档页、普通页面-排除404页面（class='nc'） */
   div#post,
-  div#page,
+  div#page:not(.nc),
+  div#tag,
+  div#category,
   div#archive {
     background: var(--trans-light);
     backdrop-filter: var(--backdrop-filter);
@@ -41,12 +43,14 @@
     background: rgba(0, 0, 0, 0.66) ;
   }
   
-  /* 夜间模式遮罩 */
+  /* 夜间模式遮罩 普通页面-排除404页面（class='nc'）*/
   [data-theme="dark"] #recent-posts .recent-post-item,
   [data-theme="dark"] #aside-content .card-widget,
   [data-theme="dark"] div#post,
   [data-theme="dark"] div#archive,
-  [data-theme="dark"] div#page {
+  [data-theme="dark"] div#tag,
+  [data-theme="dark"] div#category,
+  [data-theme="dark"] div#page:not(.nc) {
     background: var(--trans-dark);
   }
   
